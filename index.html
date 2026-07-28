@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cream Agency — онлайн-работа: операторы чатов, модели, рекрутеры</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%232B211A'/%3E%3Ccircle cx='256' cy='256' r='196' fill='none' stroke='%23BE8449' stroke-width='14'/%3E%3Ctext x='256' y='268' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-size='240' fill='%23F3EDE3'%3EC%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --cream:#F3EDE3; --milk:#FFFDF9; --espresso:#2B211A; --caramel:#BE8449; --cocoa:#6B5744; --line:#E3D9C9;
+}
+*{box-sizing:border-box; margin:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--milk); color:var(--espresso); font-family:"Segoe UI",system-ui,sans-serif; line-height:1.6;}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif; line-height:1.12; text-wrap:balance; font-weight:600;}
+a{color:inherit;}
+.wrap{max-width:1040px; margin:0 auto; padding:0 24px;}
+.eyebrow{font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--caramel); font-weight:700; margin-bottom:14px;}
+.btn{display:inline-block; background:var(--espresso); color:var(--cream); padding:14px 30px; border-radius:999px; text-decoration:none; font-weight:600; font-size:.95rem; letter-spacing:.02em; transition:opacity .15s;}
+.btn:hover{opacity:.85;}
+.btn.ghost{background:transparent; color:var(--espresso); border:1.5px solid var(--espresso);}
+section{padding:80px 0;}
+h2{font-size:clamp(1.6rem,3.5vw,2.2rem); margin-bottom:14px;}
+.lead{color:var(--cocoa); max-width:60ch; margin-bottom:40px;}
+.todo{background:#FCEFD9; border:1px dashed var(--caramel); color:#7A5A2E; font-size:.8rem; padding:3px 10px; border-radius:6px; display:inline-block;}
+
+/* header */
+header{position:sticky; top:0; background:rgba(255,253,249,.93); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); z-index:10;}
+.nav{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1040px; margin:0 auto;}
+.logo{display:flex; align-items:center; gap:10px; font-family:Georgia,serif; font-size:1.15rem; font-weight:700; text-decoration:none;}
+.logo .c{width:34px; height:34px; border-radius:50%; background:var(--espresso); color:var(--cream); display:flex; align-items:center; justify-content:center; font-size:1.05rem; border:2px solid var(--caramel);}
+.nav nav{display:flex; gap:20px; font-size:.88rem;}
+.nav nav a{text-decoration:none; color:var(--cocoa);}
+.nav nav a:hover{color:var(--espresso);}
+@media (max-width:720px){ .nav nav{display:none;} }
+
+/* hero */
+.hero{background:var(--cream); padding:104px 0 88px;}
+.hero h1{font-size:clamp(2.1rem,5.2vw,3.4rem); max-width:19ch; margin-bottom:20px;}
+.hero .sub{font-size:1.2rem; color:var(--espresso); font-weight:600; margin-bottom:12px; max-width:44ch;}
+.hero p{font-size:1.05rem; max-width:56ch; color:var(--cocoa); margin-bottom:32px;}
+.cta{display:flex; gap:14px; flex-wrap:wrap;}
+
+/* цифры */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line);}
+.stat{background:var(--milk); padding:28px 24px;}
+.stat b{display:block; font-family:Georgia,serif; font-size:2rem; color:var(--caramel); font-variant-numeric:tabular-nums;}
+.stat span{font-size:.87rem; color:var(--cocoa);}
+
+/* вакансии */
+.dark{background:var(--espresso); color:var(--cream);}
+.dark .eyebrow{color:var(--caramel);}
+.dark .lead{color:#C9B8A4;}
+.jobs{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px;}
+.job{background:#352A20; border:1px solid #4A3B2C; border-radius:14px; padding:28px; display:flex; flex-direction:column; gap:12px;}
+.job h3{font-size:1.3rem;}
+.job .pay{color:var(--caramel); font-weight:700; font-variant-numeric:tabular-nums;}
+.job p{font-size:.92rem; color:#D8CBB8;}
+.job ul{padding-left:18px; font-size:.9rem; color:#D8CBB8; display:grid; gap:6px;}
+.job .btn{margin-top:auto; align-self:flex-start; background:var(--cream); color:var(--espresso); padding:11px 24px;}
+
+/* подходит / не подходит */
+.fit{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px;}
+.fitcol{border:1px solid var(--line); border-radius:14px; padding:28px; background:var(--milk);}
+.fitcol.no{background:var(--cream);}
+.fitcol h3{font-size:1.1rem; margin-bottom:14px;}
+.fitcol ul{padding-left:18px; display:grid; gap:8px; font-size:.93rem; color:var(--cocoa);}
+
+/* шаги */
+.steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; counter-reset:step;}
+.step{background:var(--cream); border-radius:14px; padding:24px; counter-increment:step;}
+.step::before{content:"0" counter(step); font-family:Georgia,serif; font-size:1.8rem; color:var(--caramel); display:block; margin-bottom:8px;}
+.step h3{font-size:1rem; margin-bottom:6px;}
+.step p{font-size:.87rem; color:var(--cocoa);}
+
+/* конфиденциальность */
+.privacy{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px;}
+.pcard{border:1px solid var(--line); border-radius:14px; padding:26px; background:var(--milk);}
+.pcard h3{font-size:1.02rem; margin-bottom:8px;}
+.pcard p{font-size:.9rem; color:var(--cocoa);}
+
+/* кейсы */
+.cases{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px;}
+.case{background:var(--cream); border-radius:14px; padding:28px;}
+.case p{font-family:Georgia,serif; font-size:1.02rem; margin-bottom:14px;}
+.case .who{font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--caramel); font-weight:700;}
+
+/* faq */
+.faq{max-width:740px;}
+details{border-bottom:1px solid var(--line); padding:16px 0;}
+summary{cursor:pointer; font-weight:600; font-size:1rem; list-style:none; display:flex; justify-content:space-between; gap:14px;}
+summary::after{content:"+"; font-family:Georgia,serif; color:var(--caramel); font-size:1.3rem; line-height:1;}
+details[open] summary::after{content:"–";}
+details p{margin-top:10px; color:var(--cocoa); font-size:.93rem; max-width:62ch;}
+
+/* финал */
+.final{background:var(--cream); text-align:center;}
+.final h2{max-width:24ch; margin:0 auto 16px;}
+.final p{max-width:50ch; margin:0 auto 30px; color:var(--cocoa);}
+footer{padding:28px 0; border-top:1px solid var(--line); font-size:.82rem; color:var(--cocoa);}
+footer .wrap{display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;}
+
+/* ── мобильная версия ── */
+.mobilebar{display:none;}
+@media (max-width:640px){
+  section{padding:52px 0;}
+  .wrap{padding:0 18px;}
+  .hero{padding:64px 0 56px;}
+  .hero h1{font-size:2rem;}
+  .hero .sub{font-size:1.05rem;}
+  .hero p{font-size:.98rem;}
+  h2{font-size:1.5rem;}
+  .lead{margin-bottom:28px; font-size:.95rem;}
+  .cta{flex-direction:column;}
+  .cta .btn{text-align:center; width:100%; padding:15px 20px;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .stat{padding:20px 16px;}
+  .stat b{font-size:1.5rem;}
+  .stat span{font-size:.8rem;}
+  .job,.fitcol,.pcard,.case{padding:22px;}
+  .job .btn{align-self:stretch; text-align:center;}
+  .steps{grid-template-columns:1fr;}
+  .step{display:grid; grid-template-columns:auto 1fr; gap:4px 16px; align-items:start; padding:18px 20px;}
+  .step::before{grid-row:1 / span 2; font-size:1.5rem; margin:0;}
+  .nav{padding:12px 18px;}
+  .nav > .btn{display:none;}
+  summary{font-size:.95rem;}
+  body{padding-bottom:74px;}
+  .mobilebar{display:block; position:fixed; left:0; right:0; bottom:0; z-index:20; background:rgba(255,253,249,.95); backdrop-filter:blur(8px); border-top:1px solid var(--line); padding:12px 18px;}
+  .mobilebar .btn{display:block; text-align:center; width:100%; padding:14px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="#"><span class="c">C</span>Cream Agency</a>
+    <nav>
+      <a href="#jobs">Вакансии</a>
+      <a href="#how">Как начать</a>
+      <a href="#privacy">Конфиденциальность</a>
+      <a href="#faq">FAQ</a>
+      <a href="#partners">Партнёрам</a>
+    </nav>
+    <a class="btn" href="#contact" style="padding:10px 22px; font-size:.85rem;">Связаться</a>
+  </div>
+</header>
+
+<!-- ═══ 1. Первый экран ═══ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Онлайн-агентство · команда 100+ человек</div>
+    <h1>Онлайн-работа с понятными условиями — до того, как ты начнёшь</h1>
+    <div class="sub">Операторы чатов · Модели · Рекрутеры</div>
+    <p>Мы заранее рассказываем формат, обучаем и даём попробовать. Выплаты — каждую неделю, у моделей первая выплата возможна уже в первые дни. Если поймёшь, что не твоё — получишь оплату за сделанное и спокойно закончишь.</p>
+    <div class="cta">
+      <a class="btn" href="#jobs">Выбрать вакансию</a>
+      <a class="btn ghost" href="#contact">Задать вопрос менеджеру</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2. Факты ═══ -->
+<section style="padding:56px 0;">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>100+</b><span>человек в команде</span></div>
+      <div class="stat"><b>Раз в неделю</b><span>выплаты; у моделей первая — уже в первые дни</span></div>
+      <div class="stat"><b>Тест-формат</b><span>сначала пробуешь — потом решаешь</span></div>
+      <div class="stat"><b>С 2021</b><span>года строим контент-проекты</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. Вакансии ═══ -->
+<section class="dark" id="jobs">
+  <div class="wrap">
+    <div class="eyebrow">Вакансии</div>
+    <h2>Кого мы ищем</h2>
+    <p class="lead">Все позиции — удалённые. Условия каждой обсуждаются с менеджером до начала работы: ты сразу знаешь, что делаешь и сколько за это получаешь.</p>
+    <div class="jobs">
+
+      <div class="job">
+        <h3>Оператор чата</h3>
+        <div class="pay">$1 000–1 500 / мес в среднем · топы — $2 000+</div>
+        <p>Переписка с аудиторией на платформах, где работают наши проекты, — по готовым сценариям и с поддержкой наставника.</p>
+        <ul>
+          <li>Опыт не нужен: короткое обучение перед стартом</li>
+          <li>Важны грамотный письменный язык, внимательность и стабильность онлайн</li>
+          <li>График подбирается индивидуально — обсуждается с менеджером</li>
+          <li>Доход зависит от количества смен и качества работы</li>
+        </ul>
+        <a class="btn" href="#contact">Узнать условия</a>
+      </div>
+
+      <div class="job">
+        <h3>Модель</h3>
+        <div class="pay">от $1 000–1 500 / мес на лёгких офферах · до $5 000–6 000 / мес при серьёзной работе</div>
+        <p>Направлений несколько — от простого общения с аудиторией без какого-либо интима до контента 18+, стримов и работы на площадках вроде OnlyFans. Оффер подбираем под твоё свободное время, уровень отдачи и готовность к разным платформам — детали обсуждаются индивидуально до старта.</p>
+        <ul>
+          <li>Подходит и новичкам, и девушкам с опытом</li>
+          <li>Условия и формат ты узнаёшь заранее — и можешь отказаться до начала работы</li>
+          <li>Документы менеджерам не передаются: если платформа требует подтверждение личности, верификация проходит на её официальном сайте</li>
+          <li>Работа только для совершеннолетних</li>
+        </ul>
+        <a class="btn" href="#contact">Обсудить формат</a>
+      </div>
+
+      <div class="job">
+        <h3>Рекрутер</h3>
+        <div class="pay">$300 ставка + $100 за каждую приведённую модель</div>
+        <p>Поиск кандидатов — моделей и операторов — и первичное общение с ними. Дальше кандидата ведёт менеджер.</p>
+        <ul>
+          <li>Опыт не обязателен: даём материалы, скрипты и поддержку</li>
+          <li>Важны коммуникабельность и умение честно рассказать об условиях</li>
+          <li>Можно использовать свои каналы поиска — соцсети, знакомых, объявления</li>
+          <li>Доход растёт вместе с числом активных кандидатов</li>
+        </ul>
+        <a class="btn" href="#contact">Узнать условия</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4. Кому подходит / не подходит ═══ -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Честно о формате</div>
+    <h2>Кому это подходит — а кому нет</h2>
+    <p class="lead">Нам важно, чтобы ты приняла решение с открытыми глазами. Поэтому говорим прямо.</p>
+    <div class="fit">
+      <div class="fitcol">
+        <h3>✓ Подходит, если ты</h3>
+        <ul>
+          <li>Ищешь удалённый доход с понятными условиями</li>
+          <li>Готова уделять работе стабильное время, а не «раз в неделю по настроению»</li>
+          <li>Хочешь сначала попробовать формат и только потом принимать решение</li>
+          <li>Ценишь конфиденциальность и понятные договорённости</li>
+        </ul>
+      </div>
+      <div class="fitcol no">
+        <h3>✗ Не подходит, если</h3>
+        <ul>
+          <li>Тебе нет 18 лет — без исключений</li>
+          <li>Ждёшь «лёгких денег без усилий» — это работа, доход зависит от вложенного времени</li>
+          <li>Не готова к регулярному общению и обратной связи от наставника</li>
+          <li>Хочешь начать, не узнав условия, — мы так не работаем: сначала детали, потом старт</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. Как начать ═══ -->
+<section class="dark" id="how">
+  <div class="wrap">
+    <div class="eyebrow">Путь кандидата</div>
+    <h2>Как начать — 5 шагов</h2>
+    <p class="lead">От первого сообщения до первой выплаты — обычно несколько дней.</p>
+    <div class="steps">
+      <div class="step" style="background:#352A20;"><h3>Напиши менеджеру</h3><p style="color:#D8CBB8;">Пара слов о себе и какая вакансия интересна.</p></div>
+      <div class="step" style="background:#352A20;"><h3>Узнай детали</h3><p style="color:#D8CBB8;">Менеджер расскажет условия выбранной вакансии и ответит на вопросы.</p></div>
+      <div class="step" style="background:#352A20;"><h3>Пройди знакомство</h3><p style="color:#D8CBB8;">Короткое обучение или вводная — в зависимости от позиции.</p></div>
+      <div class="step" style="background:#352A20;"><h3>Попробуй формат</h3><p style="color:#D8CBB8;">Тестовый период: работаешь и смотришь, подходит ли тебе.</p></div>
+      <div class="step" style="background:#352A20;"><h3>Получи оплату и реши</h3><p style="color:#D8CBB8;">Оплата за выполненную работу приходит в любом случае — продолжишь ты или нет.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6. Конфиденциальность и верификация ═══ -->
+<section id="privacy">
+  <div class="wrap">
+    <div class="eyebrow">Конфиденциальность</div>
+    <h2>Как устроена защита твоих данных</h2>
+    <p class="lead">Мы не обещаем «стопроцентную безопасность» — так не может обещать никто. Вместо этого рассказываем, как конкретно устроен процесс.</p>
+    <div class="privacy">
+      <div class="pcard"><h3>Документы — не менеджерам</h3><p>Ты не передаёшь паспорт или другие документы сотрудникам агентства. Ни в чаты, ни «для проверки».</p></div>
+      <div class="pcard"><h3>Верификация — на самой платформе</h3><p>Если площадка требует подтверждение личности, ты проходишь его напрямую на её официальном сайте или через её сервис проверки — без посредников.</p></div>
+      <div class="pcard"><h3>Условия — до старта</h3><p>Формат, задачи и оплату ты узнаёшь до начала работы и можешь отказаться на любом этапе знакомства.</p></div>
+      <div class="pcard"><h3>Оплата за сделанное — в любом случае</h3><p>Решишь не продолжать после теста — оплату за выполненную работу всё равно получишь. Без штрафов и удержаний.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7. Кейсы (шаблоны — заменить реальными) ═══ -->
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="eyebrow">Истории команды</div>
+    <h2>Как это выглядит на практике</h2>
+    <p class="lead">Истории типичны для команды; детали изменены ради конфиденциальности.</p>
+    <div class="cases">
+      <div class="case"><p>«Пришла оператором без опыта, боялась, что не разберусь. Обучение заняло несколько дней, первую неделю рядом был наставник. Первая выплата пришла ровно через неделю — сейчас стабильно выхожу на среднюю по команде».</p><div class="who">Оператор · полгода в команде</div></div>
+      <div class="case"><p>«Начинала с самого лёгкого оффера — только переписка, без интима, около $1 200 в месяц. Когда освоилась, попросила подобрать формат посерьёзнее. Сейчас работаю на нескольких платформах и зарабатываю в несколько раз больше».</p><div class="who">Модель · год в команде</div></div>
+      <div class="case"><p>«Зашёл рекрутером на ставку. Первое время приводил по одной девушке в месяц, потом собрал свои каналы поиска — теперь бонусы за моделей стабильно превышают ставку».</p><div class="who">Рекрутер · 8 месяцев в команде</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 8. FAQ ═══ -->
+<section id="faq" style="padding-top:20px;">
+  <div class="wrap">
+    <div class="eyebrow">FAQ</div>
+    <h2>Частые вопросы</h2>
+    <div class="faq">
+      <details><summary>Нужен ли опыт?</summary><p>Нет. Для операторов и рекрутеров есть обучение и материалы, для моделей — сопровождение и наставник. Опыт ускоряет старт, но не обязателен.</p></details>
+      <details><summary>С какого возраста можно работать?</summary><p>Строго с 18 лет. Это требование и платформ, и агентства — без исключений.</p></details>
+      <details><summary>Можно ли сначала попробовать?</summary><p>Да, так и устроен процесс: короткое знакомство, тестовый период, и только потом решение о продолжении. Оплату за выполненную работу ты получишь в любом случае.</p></details>
+      <details><summary>Когда первая выплата?</summary><p>Выплаты проходят каждую неделю. У моделей первая выплата возможна уже в первые дни работы.</p></details>
+      <details><summary>Нужно ли отправлять документы менеджеру?</summary><p>Нет. Документы сотрудникам агентства не передаются. Если платформа требует верификацию, ты проходишь её напрямую на официальном сайте платформы.</p></details>
+      <details><summary>Как обеспечивается конфиденциальность?</summary><p>Условия обсуждаются лично с менеджером, документы через агентство не проходят, а форматы работы (в том числе степень публичности) обсуждаются индивидуально до старта.</p></details>
+      <details><summary>Какой график?</summary><p>Зависит от позиции: у операторов смены, у рекрутеров свободный график, у моделей — под твоё свободное время. Конкретные варианты обсуждаются с менеджером.</p></details>
+      <details><summary>Можно ли совмещать с учёбой или другой работой?</summary><p>Да, при условии, что ты можешь уделять работе стабильное оговорённое время.</p></details>
+      <details><summary>Что нужно для начала?</summary><p>Смартфон или ноутбук, стабильный интернет и время на короткое обучение. Если для позиции нужно что-то ещё — менеджер скажет заранее.</p></details>
+      <details><summary>Можно ли работать из другой страны?</summary><p>В большинстве случаев география не мешает — зависит от вакансии и платформы. Уточни свою ситуацию у менеджера.</p></details>
+      <details><summary>Как проходит оплата?</summary><p>Способ выплат подбирается удобный для тебя — детали обсудишь с менеджером до старта.</p></details>
+      <details><summary>Как закончить сотрудничество?</summary><p>Предупреждаешь менеджера, завершаешь начатые задачи и получаешь оплату за выполненную работу. Без штрафов и удержаний.</p></details>
+      <details><summary>У меня своя команда / трафик / агентство. Что предложите?</summary><p>Напиши менеджеру с пометкой «партнёрство» — форматы коллаборации обсуждаем индивидуально. Подробнее в блоке ниже.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 9. Партнёрство ═══ -->
+<section class="dark" id="partners">
+  <div class="wrap">
+    <div class="eyebrow">Партнёрство</div>
+    <h2>Уже работаешь в этой сфере? Давай объединим ресурсы</h2>
+    <p class="lead">Мы открыты к коллаборациям с агентствами, независимыми рекрутерами, владельцами команд, специалистами по трафику и всеми, у кого есть модели, операторы, база кандидатов или собственные процессы. Формат партнёрства — под ваши ресурсы, обсуждается индивидуально с менеджером.</p>
+    <a class="btn" style="background:var(--cream); color:var(--espresso);" href="#contact">Обсудить партнёрство</a>
+  </div>
+</section>
+
+<!-- ═══ 10. Финальный CTA ═══ -->
+<section class="final" id="contact">
+  <div class="wrap">
+    <div class="eyebrow">Контакт</div>
+    <h2>Напиши менеджеру — узнай условия до старта</h2>
+    <p>Пара слов о себе и какая вакансия интересна. Отвечаем в рабочее время в течение часа. Вопрос ни к чему не обязывает.</p>
+    <div class="cta" style="justify-content:center;">
+      <a class="btn" href="https://t.me/crystaliiiikkm">Написать в Telegram</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© Cream Agency · работаем только с совершеннолетними (18+)</span>
+    <span>cream_agencyy</span>
+  </div>
+</footer>
+
+<div class="mobilebar"><a class="btn" href="https://t.me/crystaliiiikkm">Написать менеджеру в Telegram</a></div>
+
+</body>
+</html>
