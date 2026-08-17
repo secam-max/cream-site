@@ -386,23 +386,44 @@ footer .wrap{display:flex; justify-content:space-between; gap:14px; flex-wrap:wr
 <script>
 (function(){
   var LEAD_KEY = 'cream_lead_sent';
+  var ADS_KEY = 'cream_ads_conv_sent';
+  var ADS_SEND_TO = 'AW-18394571169/a4uWCIO2juMcEKHDm8NE';
+
+  function alreadySent(key){
+    try { return sessionStorage.getItem(key) === '1'; } catch(err) { return false; }
+  }
+  function markSent(key){
+    try { sessionStorage.setItem(key, '1'); } catch(err) {}
+  }
+
   document.addEventListener('click', function(e){
     var el = e.target.closest('[data-meta-event="lead"]');
-    if(!el || typeof fbq !== 'function') return;
+    if(!el) return;
     var params = {
       content_name: el.getAttribute('data-btn') || '',
       button_location: el.getAttribute('data-loc') || '',
       destination: el.getAttribute('data-dest') || ''
     };
-    // Lead — один раз за сессию, чтобы не завышать конверсии
-    var sent = false;
-    try { sent = sessionStorage.getItem(LEAD_KEY) === '1'; } catch(err) {}
-    if(!sent){
-      fbq('track', 'Lead', params);
-      try { sessionStorage.setItem(LEAD_KEY, '1'); } catch(err) {}
+
+    // Meta: Lead — один раз за сессию, чтобы не завышать конверсии
+    if(typeof fbq === 'function'){
+      if(!alreadySent(LEAD_KEY)){
+        fbq('track', 'Lead', params);
+        markSent(LEAD_KEY);
+      }
+      // CTAClick — каждый клик, для детальной аналитики по кнопкам
+      fbq('trackCustom', 'CTAClick', params);
     }
-    // CTAClick — каждый клик, для детальной аналитики по кнопкам
-    fbq('trackCustom', 'CTAClick', params);
+
+    // Google Ads: конверсия — тоже один раз за сессию (учёт "Одна")
+    if(typeof gtag === 'function' && !alreadySent(ADS_KEY)){
+      gtag('event', 'conversion', {
+        send_to: ADS_SEND_TO,
+        value: 50,
+        currency: 'PLN'
+      });
+      markSent(ADS_KEY);
+    }
   });
 })();
 </script>
