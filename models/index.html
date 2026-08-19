@@ -613,12 +613,32 @@ fbq('track', 'PageView');
     _fd.experience = has ? 'С опытом' : 'Без опыта';
     _hist.push('start'); renderStep(has ? 'exp_intro' : 'no_exp_intro');
   }
+  var TG_TOKEN = '8642956455:AAEtnMiL-fjlzZ5n97GCSEBUiGq5vDgbgqU';
+  var TG_CHAT = '-5304318726';
   function submitAnketa(finalId){
     saveInput();
     var inp = document.querySelector('input[name="telegram"]');
     if(!inp.value.trim()){ inp.style.borderColor = '#D97B5A'; return; }
-    /* [ДОБАВИТЬ] POST на вебхук -> ТГ-уведомление Кристине: категория + все ответы + ник */
-    renderStep(finalId);
+    var f = _fd;
+    var lines = ['\uD83D\uDD25 Новая заявка с сайта /models', ''];
+    lines.push('Категория: ' + (f.experience||'—'));
+    lines.push('Telegram: ' + (f.telegram||'—'));
+    if(f.experience === 'С опытом'){
+      lines.push('Платформы: ' + (f.platforms||'—'));
+      lines.push('Оборот: ' + (f.revenue||'—'));
+      lines.push('Запрос: ' + (f.request||'—'));
+    } else {
+      lines.push('Возраст: ' + (f.age||'—'));
+      lines.push('Гео: ' + (f.location||'—'));
+      lines.push('Время: ' + (f.work_time||'—'));
+    }
+    var btn = document.querySelector('.btn-next');
+    if(btn){ btn.innerText = 'Отправка...'; btn.disabled = true; }
+    fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chat_id: TG_CHAT, text: lines.join('\n')})
+    }).catch(function(){}).finally(function(){ renderStep(finalId); });
   }
   function renderStep(id){
     var h = '<input type="hidden" id="curStepId" value="'+id+'">';
