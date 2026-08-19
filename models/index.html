@@ -185,6 +185,18 @@ fbq('track', 'PageView');
   .pick p{font-size:16px;color:var(--ink-soft);max-width:40ch}
   .pick p b{color:var(--accent-deep)}
 
+  /* вкладки «Кто мы / Сравнение» */
+  .kto-tabs{display:flex;gap:clamp(20px,4vw,40px);align-items:baseline;flex-wrap:wrap}
+  .kto-tab{font-family:'Oswald',Impact,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.015em;font-size:clamp(32px,5.5vw,52px);line-height:1.06;background:none;border:none;padding:0;cursor:pointer;color:var(--ink-soft);opacity:.45;transition:opacity .15s,color .15s}
+  .kto-tab.on{color:var(--ink);opacity:1}
+  .kto-tab.on::after{content:"";display:block;width:72px;height:4px;border-radius:2px;background:linear-gradient(90deg,#D9A05B,#BE8449);margin-top:16px}
+  .kto-pane{display:none}
+  .kto-pane.on{display:block}
+  .cmp .no{color:var(--warn);font-weight:600}
+  .cmp .yes{color:var(--good);font-weight:600}
+  .cmp td:nth-child(2){background:rgba(168,68,42,.05)}
+  .cmp td:nth-child(3){background:rgba(90,107,58,.07)}
+
   /* карточки «кто будет рядом» */
   .team-card{position:relative;background:linear-gradient(175deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:4px;padding:24px 22px 22px;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease}
   .team-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#D9A05B,#BE8449 60%,transparent)}
@@ -364,9 +376,29 @@ fbq('track', 'PageView');
     <div class="wrap rv">
       <div class="sec-head">
         <span class="eyebrow">О нас</span>
-        <h2>Кто мы</h2>
+        <div class="kto-tabs">
+          <button class="kto-tab on" data-pane="about">Кто мы</button>
+          <button class="kto-tab" data-pane="compare">Сравнение</button>
+        </div>
       </div>
-      <p style="font-size:clamp(18px,2.4vw,22px);line-height:1.65;color:var(--ink-soft);max-width:58ch">Cream Agency — это международное агентство, которое <b style="color:var(--ink)">с 2021 года</b> помогает моделям расти, увеличивать доход и масштабироваться за счёт сильной команды, трафика и работы сразу <b style="color:var(--ink)">с несколькими платформами</b>.</p>
+      <div class="kto-pane on" data-pane="about">
+        <p style="font-size:clamp(18px,2.4vw,22px);line-height:1.65;color:var(--ink-soft);max-width:58ch">Cream Agency — это международное агентство, которое <b style="color:var(--ink)">с 2021 года</b> помогает моделям расти, увеличивать доход и масштабироваться за счёт сильной команды, трафика и работы сразу <b style="color:var(--ink)">с несколькими платформами</b>.</p>
+      </div>
+      <div class="kto-pane" data-pane="compare">
+        <div class="tablewrap">
+        <table class="cmp">
+          <thead><tr><th>Что сравниваем</th><th><span class="no">✗</span> Другие агентства</th><th><span class="yes">✓</span> Cream Agency</th></tr></thead>
+          <tbody>
+            <tr><td>Контракты</td><td><span class="no">✗</span> Жёсткий контракт на 12 месяцев</td><td><span class="yes">✓</span> Помесячно — мы зарабатываем твоё доверие каждый день</td></tr>
+            <tr><td>Условия партнёрства</td><td><span class="no">✗</span> Агрессивные проценты, никакой гибкости</td><td><span class="yes">✓</span> Подбираются под твой уровень и цели</td></tr>
+            <tr><td>Команда</td><td><span class="no">✗</span> Мужчины, которые не понимают женщин</td><td><span class="yes">✓</span> Команда из девушек, которые понимают тебя</td></tr>
+            <tr><td>Твои границы</td><td><span class="no">✗</span> Давят на откровенный контент</td><td><span class="yes">✓</span> Твои границы всегда уважаются</td></tr>
+            <tr><td>Поддержка</td><td><span class="no">✗</span> Пропадают после подписания</td><td><span class="yes">✓</span> Поддержка 24/7 и связь каждый день</td></tr>
+            <tr><td>Средний рост</td><td><span class="no">✗</span> Неизвестно или завышенные обещания</td><td><span class="yes">✓</span> До 2500% подтверждённого роста</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -655,6 +687,15 @@ fbq('track', 'PageView');
     document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
   })();
 
+
+
+  /* вкладки Кто мы / Сравнение */
+  document.querySelectorAll('.kto-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.kto-tab').forEach(function(x){ x.classList.toggle('on', x===tab); });
+      document.querySelectorAll('.kto-pane').forEach(function(pn){ pn.classList.toggle('on', pn.getAttribute('data-pane')===tab.getAttribute('data-pane')); });
+    });
+  });
 
   /* карусель выплат: автопрокрутка + ручная (drag/swipe), бесшовный цикл */
   (function(){
