@@ -232,11 +232,10 @@ fbq('track', 'PageView');
   .dark-sec .eyebrow{color:var(--gold)}
   .dark-sec .muted{color:var(--cream-soft)}
   .dark-sec h2{color:var(--cream-on-dark)}
-  .pay-wrap{overflow:hidden;margin:20px 0 14px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-  .pay-track{display:flex;gap:12px;width:max-content;animation:payscroll 40s linear infinite}
-  .pay-wrap:hover .pay-track,.pay-wrap:active .pay-track{animation-play-state:paused}
-  @keyframes payscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  @media (prefers-reduced-motion: reduce){.pay-track{animation:none}.pay-wrap{overflow-x:auto;mask-image:none;-webkit-mask-image:none}}
+  .pay-wrap{overflow-x:auto;margin:20px 0 14px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);scrollbar-width:none;cursor:grab}
+  .pay-wrap::-webkit-scrollbar{display:none}
+  .pay-wrap.dragging{cursor:grabbing;scroll-snap-type:none}
+  .pay-track{display:flex;gap:12px;width:max-content}
   .shot{flex:0 0 auto;width:min(46vw,190px);aspect-ratio:9/16;border:1px solid #5A4630;border-radius:8px;background:rgba(246,237,221,.04);display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font-size:12px;color:var(--cream-soft);overflow:hidden}
   .shot img{width:100%;height:100%;object-fit:cover;display:block}
   .caption-teach{font-size:14.5px;color:var(--cream-soft);border-left:2px solid var(--gold);padding-left:16px;line-height:1.6}
@@ -516,9 +515,6 @@ fbq('track', 'PageView');
         <div class="shot">[скрин выплаты 4]</div>
         <div class="shot">[скрин выплаты 5]</div>
       </div></div>
-        <div class="shot">[скрин выплаты · модель B · дата+1]</div>
-        <div class="shot">[скрин выплаты · модель C · дата+2]</div>
-      </div>
       <p class="caption-teach">Больше — в канале.</p>
       <div style="margin-top:18px"><a class="btn btn-ghost-dark" href="https://t.me/crystallik2" target="_blank" rel="noopener">Перейти в канал →</a></div>
     </div>
@@ -587,6 +583,42 @@ fbq('track', 'PageView');
       es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target);} });
     },{threshold:.12});
     document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  })();
+
+
+  /* карусель выплат: автопрокрутка + ручная (drag/swipe), бесшовный цикл */
+  (function(){
+    var wrap = document.querySelector('.pay-wrap'), track = document.getElementById('payTrack');
+    if(!wrap || !track) return;
+    var idle = 0, dragging = false, startX = 0, startScroll = 0;
+    function half(){ return track.scrollWidth / 2; }
+    function loopFix(){
+      var h = half();
+      if(wrap.scrollLeft >= h) wrap.scrollLeft -= h;
+      else if(wrap.scrollLeft <= 0) wrap.scrollLeft += h;
+    }
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    (function tick(){
+      if(!reduce && !dragging && idle <= 0) { wrap.scrollLeft += 0.6; loopFix(); }
+      if(idle > 0) idle--;
+      requestAnimationFrame(tick);
+    })();
+    wrap.addEventListener('scroll', function(){ if(dragging || idle>0) loopFix(); }, {passive:true});
+    wrap.addEventListener('touchstart', function(){ idle = 240; }, {passive:true});
+    wrap.addEventListener('touchend', function(){ idle = 180; }, {passive:true});
+    wrap.addEventListener('pointerdown', function(e){
+      if(e.pointerType !== 'mouse') return;
+      dragging = true; wrap.classList.add('dragging');
+      startX = e.clientX; startScroll = wrap.scrollLeft;
+      wrap.setPointerCapture(e.pointerId);
+    });
+    wrap.addEventListener('pointermove', function(e){
+      if(!dragging) return;
+      wrap.scrollLeft = startScroll - (e.clientX - startX); loopFix();
+    });
+    ['pointerup','pointercancel'].forEach(function(ev){
+      wrap.addEventListener(ev, function(){ dragging = false; wrap.classList.remove('dragging'); idle = 120; });
+    });
   })();
 
   /* модальная анкета — флоу по образцу GLM */
