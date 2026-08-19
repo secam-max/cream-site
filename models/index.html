@@ -192,10 +192,16 @@ fbq('track', 'PageView');
   .kto-tab.on::after{content:"";display:block;width:72px;height:4px;border-radius:2px;background:linear-gradient(90deg,#D9A05B,#BE8449);margin-top:16px}
   .kto-pane{display:none}
   .kto-pane.on{display:block}
-  .cmp .no{color:var(--warn);font-weight:600}
-  .cmp .yes{color:var(--good);font-weight:600}
-  .cmp td:nth-child(2){background:rgba(168,68,42,.05)}
-  .cmp td:nth-child(3){background:rgba(90,107,58,.07)}
+  .cmp2{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 14px 40px rgba(122,90,46,.1)}
+  .cmp2 .h{padding:15px 12px;text-align:center;font-family:'Oswald',Impact,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:15px}
+  .cmp2 .h.bad{background:rgba(168,68,42,.14);color:var(--warn)}
+  .cmp2 .h.good{background:rgba(90,107,58,.16);color:var(--good)}
+  .cmp2 .c{padding:14px;font-size:14.5px;line-height:1.5;border-top:1px solid var(--line-soft);display:flex;gap:9px;align-items:flex-start}
+  .cmp2 .c .m{flex-shrink:0;font-weight:700}
+  .cmp2 .c.bad{background:rgba(168,68,42,.055);color:var(--ink-soft)}
+  .cmp2 .c.bad .m{color:var(--warn)}
+  .cmp2 .c.good{background:rgba(90,107,58,.06);color:var(--ink)}
+  .cmp2 .c.good .m{color:var(--good)}
 
   /* карточки «кто будет рядом» */
   .team-card{position:relative;background:linear-gradient(175deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:4px;padding:24px 22px 22px;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease}
@@ -377,26 +383,27 @@ fbq('track', 'PageView');
       <div class="sec-head">
         <span class="eyebrow">О нас</span>
         <div class="kto-tabs">
-          <button class="kto-tab on" data-pane="about">Кто мы</button>
-          <button class="kto-tab" data-pane="compare">Сравнение</button>
+          <button class="kto-tab" data-pane="about">Кто мы</button>
+          <button class="kto-tab on" data-pane="compare">Сравнение</button>
         </div>
       </div>
-      <div class="kto-pane on" data-pane="about">
+      <div class="kto-pane" data-pane="about">
         <p style="font-size:clamp(18px,2.4vw,22px);line-height:1.65;color:var(--ink-soft);max-width:58ch">Cream Agency — это международное агентство, которое <b style="color:var(--ink)">с 2021 года</b> помогает моделям расти, увеличивать доход и масштабироваться за счёт сильной команды, трафика и работы сразу <b style="color:var(--ink)">с несколькими платформами</b>.</p>
       </div>
-      <div class="kto-pane" data-pane="compare">
-        <div class="tablewrap">
-        <table class="cmp">
-          <thead><tr><th>Что сравниваем</th><th><span class="no">✗</span> Другие агентства</th><th><span class="yes">✓</span> Cream Agency</th></tr></thead>
-          <tbody>
-            <tr><td>Контракты</td><td><span class="no">✗</span> Жёсткий контракт на 12 месяцев</td><td><span class="yes">✓</span> Помесячно — мы зарабатываем твоё доверие каждый день</td></tr>
-            <tr><td>Условия партнёрства</td><td><span class="no">✗</span> Агрессивные проценты, никакой гибкости</td><td><span class="yes">✓</span> Подбираются под твой уровень и цели</td></tr>
-            <tr><td>Команда</td><td><span class="no">✗</span> Мужчины, которые не понимают женщин</td><td><span class="yes">✓</span> Команда из девушек, которые понимают тебя</td></tr>
-            <tr><td>Твои границы</td><td><span class="no">✗</span> Давят на откровенный контент</td><td><span class="yes">✓</span> Твои границы всегда уважаются</td></tr>
-            <tr><td>Поддержка</td><td><span class="no">✗</span> Пропадают после подписания</td><td><span class="yes">✓</span> Поддержка 24/7 и связь каждый день</td></tr>
-            <tr><td>Средний рост</td><td><span class="no">✗</span> Неизвестно или завышенные обещания</td><td><span class="yes">✓</span> До 2500% подтверждённого роста</td></tr>
-          </tbody>
-        </table>
+      <div class="kto-pane on" data-pane="compare">
+        <div class="cmp2">
+          <div class="h bad">Другие агентства</div>
+          <div class="h good">Cream Agency</div>
+          <div class="c bad"><span class="m">✗</span>Долгая раскачка анкеты вначале</div>
+          <div class="c good"><span class="m">✓</span>Заработок с 1-го дня</div>
+          <div class="c bad"><span class="m">✗</span>Агрессивные проценты, никакой гибкости</div>
+          <div class="c good"><span class="m">✓</span>Подбираются под твой уровень и цели</div>
+          <div class="c bad"><span class="m">✗</span>Мужчины, которые не понимают девушек</div>
+          <div class="c good"><span class="m">✓</span>Команда из девушек, которые понимают тебя</div>
+          <div class="c bad"><span class="m">✗</span>Давят на откровенный контент</div>
+          <div class="c good"><span class="m">✓</span>Твои границы всегда уважаются</div>
+          <div class="c bad"><span class="m">✗</span>Пропадают и долго отвечают</div>
+          <div class="c good"><span class="m">✓</span>Поддержка 24/7 и связь каждый день</div>
         </div>
       </div>
     </div>
