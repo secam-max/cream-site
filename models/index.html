@@ -145,6 +145,20 @@ fbq('track', 'PageView');
   .hero .wrap{position:relative;z-index:2}
   .hero-flag{display:inline-flex;gap:9px;align-items:center;border:1px solid #4A3B2C;border-radius:99px;padding:6px 16px;font-size:12.5px;color:var(--cream-soft);background:rgba(0,0,0,.2)}
   .hero-flag .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px rgba(217,160,91,.9)}
+  /* ===== ТРАСТ-БАР: аватарки + счётчик ===== */
+  .trustbar{display:inline-flex;align-items:center;gap:14px;border:1px solid #4A3B2C;border-radius:99px;
+    padding:7px 20px 7px 10px;background:rgba(0,0,0,.24);max-width:100%}
+  .trustbar .faces{display:flex;flex-shrink:0}
+  .trustbar .faces img{width:34px;height:34px;border-radius:50%;object-fit:cover;
+    border:2px solid #2A2014;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+  .trustbar .faces img+img{margin-left:-12px}
+  .trustbar .tb-text{font-size:13.5px;color:var(--cream-soft);line-height:1.3}
+  .trustbar .tb-text b{color:var(--cream-on-dark);font-weight:700}
+  @media(max-width:480px){
+    .trustbar{gap:10px;padding:6px 15px 6px 8px}
+    .trustbar .faces img{width:29px;height:29px}
+    .trustbar .tb-text{font-size:12.5px}
+  }
   .hero h1{font-size:clamp(48px,10vw,100px);margin:26px 0 22px;color:var(--cream-on-dark)}
   .hero h1 em{font-style:italic;color:var(--gold);font-family:Georgia,serif;font-weight:normal;text-transform:none;letter-spacing:0}
   .hero-sub{font-size:clamp(17px,2.5vw,20px);max-width:54ch;color:var(--cream-soft);line-height:1.6}
@@ -367,6 +381,15 @@ fbq('track', 'PageView');
   <div class="hero">
     <div class="wrap hero-grid" style="max-width:1100px">
       <div class="hero-copy">
+        <div class="trustbar">
+          <div class="faces">
+            <img src="avatars/a1.jpg" alt="" width="34" height="34" loading="lazy">
+            <img src="avatars/a2.jpg" alt="" width="34" height="34" loading="lazy">
+            <img src="avatars/a3.jpg" alt="" width="34" height="34" loading="lazy">
+            <img src="avatars/a4.jpg" alt="" width="34" height="34" loading="lazy">
+          </div>
+          <span class="tb-text"><b>220+ моделей</b> доверяют нам</span>
+        </div>
         <h1>Первые деньги — <em>в первый день</em> работы.</h1>
         <p class="hero-sub">Первую неделю платим <b>каждый день</b> — чтобы ты убедилась, что всё честно. Не подошло — уходишь в любой момент.</p>
 
