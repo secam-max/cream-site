@@ -816,6 +816,46 @@ fbq('track', 'PageView');
   }
   var TG_TOKEN = '8642956455:AAEtnMiL-fjlzZ5n97GCSEBUiGq5vDgbgqU';
   var TG_CHAT = '-1004490041819';
+  var MANAGER_TG = 'crystaliiiikkm';
+  var LEAD_QUEUE_KEY = 'cream_lead_queue';
+  var _sendFailed = false, _leadText = '';
+  function lsGet(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch(e){ return null; } }
+  function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  /* Отправка с защитой от потери заявки:
+     - если группу перевели в супергруппу, Telegram отдаёт migrate_to_chat_id — повторяем туда;
+     - на сетевых/временных ошибках делаем ещё 2 попытки;
+     - если так и не ушло — заявка остаётся в очереди браузера и уйдёт при следующем заходе. */
+  function tgSend(text, chat){
+    return fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chat_id: chat, text: text})
+    }).then(function(r){ return r.json(); }).catch(function(){ return {ok:false}; });
+  }
+  function sendLead(text, attempt){
+    attempt = attempt || 1;
+    var chat = lsGet('cream_tg_chat') || TG_CHAT;
+    return tgSend(text, chat).then(function(res){
+      if(res.ok) return true;
+      var mig = res.parameters && res.parameters.migrate_to_chat_id;
+      if(mig){ lsSet('cream_tg_chat', String(mig)); return tgSend(text, mig).then(function(r){ return !!r.ok; }); }
+      if(attempt < 3) return new Promise(function(ok){ setTimeout(ok, 1500); }).then(function(){ return sendLead(text, attempt + 1); });
+      return false;
+    });
+  }
+  function queueLead(text){ var q = lsGet(LEAD_QUEUE_KEY) || []; q.push(text); lsSet(LEAD_QUEUE_KEY, q); }
+  (function flushQueue(){
+    var q = lsGet(LEAD_QUEUE_KEY) || [];
+    if(!q.length) return;
+    lsSet(LEAD_QUEUE_KEY, []);
+    q.forEach(function(t){ sendLead(t + '\n\n(повторная отправка)').then(function(ok){ if(!ok) queueLead(t); }); });
+  })();
+  function fallbackBlock(){
+    if(!_sendFailed) return '';
+    var url = 'https://t.me/' + MANAGER_TG + '?text=' + encodeURIComponent(_leadText);
+    return '<div class="modal-text" style="text-align:left;margin-top:16px"><b>Чтобы анкета точно дошла</b>, отправь её менеджеру напрямую — текст уже готов:</div>'
+      + '<a class="btn-next" style="display:block;text-align:center;margin-top:12px;width:100%;text-decoration:none" href="' + url + '" target="_blank" rel="noopener">Отправить анкету менеджеру</a>';
+  }
   function submitAnketa(finalId){
     saveInput();
     var inp = document.querySelector('input[name="telegram"]');
@@ -835,11 +875,12 @@ fbq('track', 'PageView');
     }
     var btn = document.querySelector('.btn-next');
     if(btn){ btn.innerText = 'Отправка...'; btn.disabled = true; }
-    fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({chat_id: TG_CHAT, text: lines.join('\n')})
-    }).catch(function(){}).finally(function(){ renderStep(finalId); });
+    _leadText = lines.join('\n');
+    sendLead(_leadText).then(function(ok){
+      _sendFailed = !ok;
+      if(!ok) queueLead(_leadText);
+      renderStep(finalId);
+    });
   }
   function renderStep(id){
     var h = '<input type="hidden" id="curStepId" value="'+id+'">';
@@ -882,6 +923,7 @@ fbq('track', 'PageView');
       case 'exp_final':
         h += '<div class="final-screen"><div class="final-icon">🔥</div><div class="modal-title">Принято. Твоя заявка в статусе <span>«Приоритет»</span></div>'
           + '<div class="modal-text" style="text-align:left">Мы понимаем язык цифр и результатов. Менеджер напишет тебе в личные сообщения в течение 30–60 минут.<br><br><span class="modal-note">На всякий случай проверь, чтобы в настройках твоего Telegram была открыта возможность писать тебе в личные сообщения. На связи 🤍</span></div>'
+          + fallbackBlock()
           + '<button class="btn-next" style="margin-top:20px;width:100%" onclick="closeAnketa()">Закрыть</button></div>';
         break;
       case 'no_exp_intro':
@@ -915,6 +957,7 @@ fbq('track', 'PageView');
       case 'no_exp_final':
         h += '<div class="final-screen"><div class="final-icon">✨</div><div class="modal-title">Идеально, анкета <span>принята!</span></div>'
           + '<div class="modal-text" style="text-align:left">Менеджер уже изучает твои ответы и напишет тебе в личные сообщения в течение 30–60 минут.<br><br><span class="modal-note">На всякий случай проверь, чтобы в настройках твоего Telegram была открыта возможность писать тебе в личные сообщения. На связи 🤍</span></div>'
+          + fallbackBlock()
           + '<button class="btn-next" style="margin-top:20px;width:100%" onclick="closeAnketa()">Закрыть</button></div>';
         break;
       case 'under18':
